@@ -1,8 +1,8 @@
 import React from 'react';
-import { Board } from './Board'
+import Board from './Board'
 
 const SIZE = 20;
-const BOARD = Array(SIZE).fill(null).map(a => {
+const BOARD = Array(SIZE).fill(null).map(() => {
     return Array(SIZE).fill(null);
 });
 
@@ -11,7 +11,7 @@ const obj = {
     'O': 'X'
 }
 
-export class Game extends React.Component {
+export default class Game extends React.Component {
     constructor(props) {
         super(props);
 
@@ -30,8 +30,10 @@ export class Game extends React.Component {
     }
 
     calculateWinner(squares) {
-        for (let i = 0; i < SIZE; i++) {
-            for (let j = 0; j < SIZE; j++) {
+        if (!squares) return null;
+
+        for (let i = 0; i < SIZE; i += 1) {
+            for (let j = 0; j < SIZE; j += 1) {
                 if (this.checkVertical(squares, i, j)) {
                     console.log("checkVertical")
                     return {
@@ -63,6 +65,7 @@ export class Game extends React.Component {
         return null;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     checkDiagonal(squares, x, y) {
         if (!(x - 4 < 0 || y + 4 >= 20)) {
             if (
@@ -72,7 +75,7 @@ export class Game extends React.Component {
                 squares[x][y] === squares[x - 3][y + 3] &&
                 squares[x][y] === squares[x - 4][y + 4]
             ) {
-                let value = '' + squares[x][y];
+                const value = `${squares[x][y]}`;
                 if (x - 5 >= 0 && y + 5 <= 19 && x + 1 <= 19 && y - 1 >= 0 && squares[x + 1][y - 1] === obj[value] && squares[x - 5][y + 5] === obj[value])
                     return false;
 
@@ -91,7 +94,7 @@ export class Game extends React.Component {
                 squares[x][y] === squares[x + 3][y + 3] &&
                 squares[x][y] === squares[x + 4][y + 4]
             ) {
-                let value = '' + squares[x][y];
+                const value = `${squares[x][y]}`;
                 if (x - 1 >= 0 && y - 1 >= 0 && x + 5 <= 19 && y + 5 <= 19 && squares[x - 1][y - 1] === obj[value] && squares[x + 5][y + 5] === obj[value])
                     return false;
 
@@ -105,6 +108,7 @@ export class Game extends React.Component {
         return false;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     checkHorizontal(squares, x, y) {
         if (y + 4 >= 20) return false;
 
@@ -115,7 +119,7 @@ export class Game extends React.Component {
             squares[x][y] === squares[x][y + 3] &&
             squares[x][y] === squares[x][y + 4]
         ) {
-            let value = '' + squares[x][y];
+            const value = `${squares[x][y]}`;
             if (y - 1 >= 0 && y + 5 <= 19 && squares[x][y - 1] === obj[value] && squares[x][y + 5] === obj[value])
                 return false;
 
@@ -125,6 +129,7 @@ export class Game extends React.Component {
         return false;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     checkVertical(squares, x, y) {
         if (x + 4 >= 20) return false;
 
@@ -135,7 +140,7 @@ export class Game extends React.Component {
             squares[x][y] === squares[x + 3][y] &&
             squares[x][y] === squares[x + 4][y]
         ) {
-            let value = '' + squares[x][y];
+            const value = `${squares[x][y]}`;
             if (x - 1 >= 0 && x + 5 <= 19 && squares[x - 1][y] === obj[value] && squares[x + 5][y] === obj[value])
                 return false;
 
@@ -157,32 +162,37 @@ export class Game extends React.Component {
     }
 
     handleClick(x, y) {
-        if (this.calculateWinner(this.state.squares) || this.state.squares[x][y]) {
+        const { squares: stateSquare, xIsNext, history: stateHistory, stepNumber: stateStepNumber } = this.state;
+
+        if (this.calculateWinner(stateSquare) || stateSquare[x][y]) {
             return;
         }
 
-        const squares = this.state.squares.map(s => [...s]);
-        squares[x][y] = this.state.xIsNext ? 'X' : 'O';
+        const squares = stateSquare.map(s => [...s]);
+        squares[x][y] = xIsNext ? 'X' : 'O';
 
-        let winner = this.calculateWinner(squares);
+        const winner = this.calculateWinner(squares);
         let result = this.activeWinner(winner);
         if (!result) result = { active: BOARD.map(s => [...s]) }
-        let history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const history = stateHistory.slice(0, stateStepNumber + 1);
         history.push({ x, y });
-        this.setState(Object.assign({}, result, {
-            squares: squares,
-            xIsNext: !this.state.xIsNext,
+
+        this.setState({
+            ...result, squares,
+            xIsNext: !xIsNext,
             history,
-            stepNumber: this.state.stepNumber + 1
-        }))
+            stepNumber: stateStepNumber + 1
+        })
 
     }
 
     activeWinner(winner) {
+        const { active: stateActive } = this.state;
+
         if (winner) {
             if (winner.type === 'vertical') {
-                let { i, j } = winner.pos;
-                let active = Object.assign({}, this.state.active);
+                const { i, j } = winner.pos;
+                const active = { ...stateActive };
 
                 active[i][j] = true;
                 active[i + 1][j] = true;
@@ -190,8 +200,8 @@ export class Game extends React.Component {
                 active[i + 3][j] = true;
                 active[i + 4][j] = true;
 
-                let result = {
-                    active: active,
+                const result = {
+                    active,
                     isWin: true,
                     winInfo: { x: i, y: j }
                 }
@@ -199,9 +209,9 @@ export class Game extends React.Component {
                 return result;
 
             }
-            else if (winner.type === 'horizontal') {
-                let { i, j } = winner.pos;
-                let active = Object.assign({}, this.state.active);
+            if (winner.type === 'horizontal') {
+                const { i, j } = winner.pos;
+                const active = { ...stateActive };
 
                 active[i][j + 1] = true;
                 active[i][j + 2] = true;
@@ -209,18 +219,18 @@ export class Game extends React.Component {
                 active[i][j + 4] = true;
                 active[i][j] = true;
 
-                let result = {
-                    active: active,
+                const result = {
+                    active,
                     isWin: true,
                     winInfo: { x: i, y: j }
                 }
 
                 return result;
             }
-            else if (winner.type === 'diagonal') {
+            if (winner.type === 'diagonal') {
                 if (winner.status === 2) {
-                    let { i, j } = winner.pos;
-                    let active = Object.assign({}, this.state.active);
+                    const { i, j } = winner.pos;
+                    const active = { ...stateActive };
 
                     active[i + 1][j + 1] = true;
                     active[i + 2][j + 2] = true;
@@ -228,16 +238,16 @@ export class Game extends React.Component {
                     active[i + 4][j + 4] = true;
                     active[i][j] = true;
 
-                    let result = {
-                        active: active,
+                    const result = {
+                        active,
                         isWin: true,
                         winInfo: { x: i, y: j }
                     }
 
                     return result;
-                } else if (winner.status === 1) {
-                    let { i, j } = winner.pos;
-                    let active = Object.assign({}, this.state.active);
+                } if (winner.status === 1) {
+                    const { i, j } = winner.pos;
+                    const active = { ...stateActive };
 
                     active[i - 1][j + 1] = true;
                     active[i - 2][j + 2] = true;
@@ -245,14 +255,14 @@ export class Game extends React.Component {
                     active[i - 4][j + 4] = true;
                     active[i][j] = true;
 
-                    let result = {
-                        active: active,
+                    const result = {
+                        active,
                         isWin: true,
                         winInfo: { x: i, y: j }
                     }
 
                     return result;
-                } else return false
+                } return false
             }
 
             return false;
@@ -262,32 +272,36 @@ export class Game extends React.Component {
     }
 
     jumpTo(step) {
-        let squares = BOARD.map(s => [...s]);
-        for (let i = 1; i <= step; i++) {
-            squares[this.state.history[i].x][this.state.history[i].y] = (i % 2) ? 'X' : 'O';
+        const { history: stateHistory } = this.state;
+
+        const squares = BOARD.map(s => [...s]);
+        for (let i = 1; i <= step; i += 1) {
+            squares[stateHistory[i].x][stateHistory[i].y] = (i % 2) ? 'X' : 'O';
         }
-        let history = [...this.state.history];
+        let history = [...stateHistory];
         history = history.map(v => {
+            // eslint-disable-next-line no-param-reassign
             v.active = false;
             return v;
         })
         history[step].active = true;
 
-        let winner = this.calculateWinner(squares);
+        const winner = this.calculateWinner(squares);
         let result = this.activeWinner(winner);
         if (!result) result = { active: BOARD.map(s => [...s]) }
-        this.setState(Object.assign({}, {
+        this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
             squares,
             history
-        }
-            , result));
+            , ...result
+        });
     }
 
     sort() {
+        const { sort } = this.state;
         console.log("Reverse");
-        if (this.state.sort) {
+        if (sort) {
             this.setState({ sort: false })
 
         }
@@ -298,42 +312,46 @@ export class Game extends React.Component {
     }
 
     render() {
+        const { isWin, squares, winInfo, xIsNext, sort, history: stateHistory, active: stateActive } = this.state;
         let status;
-        if (this.state.isWin) {
-            status = 'Người chiến thắng: ' + this.state.squares[this.state.winInfo.x][this.state.winInfo.y];
+        if (isWin) {
+            status = `Người chiến thắng: ${squares[winInfo.x][winInfo.y]}`;
         } else {
-            status = 'Người chơi tiếp theo: ' + (this.state.xIsNext ? 'X' : 'O');
+            status = `Người chơi tiếp theo: ${xIsNext ? 'X' : 'O'}`;
         }
 
         let history = [];
         let historyStatus
 
-        if (this.state.sort) {
-            history = [...this.state.history];
+        if (sort) {
+            history = [...stateHistory];
 
             historyStatus = history.map((step, move) => {
                 if (move === 0)
                     return (
+                        // eslint-disable-next-line react/no-array-index-key
                         <button type="button" key={move} onClick={() => this.jumpTo(move)} className={step.active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to start</button>
                     );
-                else
-                    return (
-                        <button type="button" key={move} onClick={() => this.jumpTo(move)} className={step.active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to #{move}</button>
-                    );
+                return (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <button type="button" key={move} onClick={() => this.jumpTo(move)} className={step.active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to #{move}</button>
+                );
             })
         }
         else {
-            history = [...this.state.history];
+            history = [...stateHistory];
             historyStatus = history.map((step, move) => {
+                // eslint-disable-next-line no-param-reassign
                 move = history.length - move - 1;
                 if (move === 0)
                     return (
+                        // eslint-disable-next-line react/no-array-index-key
                         <button type="button" key={move} onClick={() => this.jumpTo(move)} className={history[move].active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to start</button>
                     );
-                else
-                    return (
-                        <button type="button" key={move} onClick={() => this.jumpTo(move)} className={history[move].active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to #{move}</button>
-                    );
+                return (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <button type="button" key={move} onClick={() => this.jumpTo(move)} className={history[move].active ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}>Go to #{move}</button>
+                );
             })
         }
 
@@ -341,7 +359,9 @@ export class Game extends React.Component {
         return (
             <div className="row">
                 <div className="col-md-3">
-                    <h4>Lịch sử nước đi <i className="fa fa-sort" onClick={() => this.sort()}></i></h4>
+                    <h4>Lịch sử nước đi
+                        <i className="fa fa-sort" role="presentation" onClick={() => this.sort()} />
+                    </h4>
                     <div className="list-group">
                         {historyStatus}
                     </div>
@@ -351,13 +371,13 @@ export class Game extends React.Component {
                         <div className="game-board">
                             <div className="row">
                                 <div className="col-md-6"> <h4 className="status">{status}</h4> </div>
-                                <div className="col-md-6"> <button onClick={() => this.replay()} className="btn btn-success">Chơi lại</button> </div>
+                                <div className="col-md-6"> <button type="button" onClick={() => this.replay()} className="btn btn-success">Chơi lại</button> </div>
                             </div>
                             <Board
-                                squares={this.state.squares}
-                                xIsNext={this.state.xIsNext}
+                                squares={squares}
+                                xIsNext={xIsNext}
                                 onClick={(x, y) => this.handleClick(x, y)}
-                                active={this.state.active}
+                                active={stateActive}
                             />
                         </div>
                     </div>

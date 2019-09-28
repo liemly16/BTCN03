@@ -7,19 +7,18 @@
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
   },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "pretty-quick --staged",
-      "eslint src/ --fix",
-      "git add"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint"
+    }
   },
   "scripts": {
+    "lint": "eslint src/ --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "precommit": "lint-staged"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
