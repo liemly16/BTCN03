@@ -7,6 +7,13 @@
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
   },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "pretty-quick --staged",
+      "eslint src/ --fix",
+      "git add"
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
