@@ -35,7 +35,6 @@ export default class Game extends React.Component {
         for (let i = 0; i < SIZE; i += 1) {
             for (let j = 0; j < SIZE; j += 1) {
                 if (this.checkVertical(squares, i, j)) {
-                    console.log("checkVertical")
                     return {
                         pos: { i, j },
                         type: 'vertical'
@@ -43,7 +42,6 @@ export default class Game extends React.Component {
                 }
 
                 if (this.checkHorizontal(squares, i, j)) {
-                    console.log("checkHorizontal")
                     return {
                         pos: { i, j },
                         type: 'horizontal'
@@ -51,7 +49,6 @@ export default class Game extends React.Component {
                 }
 
                 if (this.checkDiagonal(squares, i, j)) {
-                    console.log("checkDiagonal");
                     return {
                         pos: { i, j },
                         type: 'diagonal',
@@ -300,7 +297,6 @@ export default class Game extends React.Component {
 
     sort() {
         const { sort } = this.state;
-        console.log("Reverse");
         if (sort) {
             this.setState({ sort: false })
 
