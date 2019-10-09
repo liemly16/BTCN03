@@ -1,0 +1,48 @@
+body {
+  font: 10px "Century Gothic", Futura, sans-serif;
+  margin: 16px;
+}
+
+
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 26px;
+  height: 26px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 26px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  text-align: center;
+}
+
+.wrap {
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+}
+
+.active {
+  background-color: lightblue;
+}
+
