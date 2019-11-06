@@ -1,6 +1,8 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
+import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -12,7 +14,10 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
 
-const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunkMiddleware, createLogger())
+);
 
 ReactDOM.render(
   <Provider store={store}>
