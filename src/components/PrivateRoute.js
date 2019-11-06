@@ -19,7 +19,6 @@ const PrivateRoute = ({ component: Component, user, ...rest }) => (
 );
 
 const mapStateToProps = state => {
-    console.log(state);
   return {
     user: state.user
   };
