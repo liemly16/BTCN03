@@ -26,6 +26,8 @@ function login(ownProps, username, password) {
     dispatch(request({ username }));
     userService.login(username, password).then(
       res => {
+        localStorage.setItem('user', JSON.stringify(res.result.user));
+        localStorage.setItem('token', res.result.token);
         ownProps.history.push('/');
         alert('Bạn đã đăng nhập thành công');
         dispatch(success(res.result.user, res.result.token));
@@ -49,7 +51,7 @@ function register(username, password, ownProps) {
   function failure(error) {
     return { type: userConstants.REGISTER_FAILURE, error };
   }
-  
+
   return dispatch => {
     dispatch(request());
     userService.register(username, password).then(

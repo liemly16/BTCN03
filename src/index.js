@@ -6,13 +6,14 @@ import { createLogger } from 'redux-logger';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App';
+// import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './reducers';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
+import Information from './components/Information';
 import PrivateRoute from './components/PrivateRoute';
 
 const store = createStore(
@@ -20,12 +21,12 @@ const store = createStore(
   applyMiddleware(thunkMiddleware, createLogger())
 );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
+// ReactDOM.render(
+//   <Provider store={store}>
+//     <App />
+//   </Provider>,
+//   document.getElementById('root')
+// );
 
 const routing = (
   <Provider store={store}>
@@ -35,6 +36,7 @@ const routing = (
         <PrivateRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/information" component={Information} />
       </div>
     </Router>
   </Provider>
