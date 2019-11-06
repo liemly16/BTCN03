@@ -1,3 +1,3 @@
 export default {
-  host: 'https://liem-btcn06.herokuapp.com'
+  host: 'http://localhost:5000'
 };

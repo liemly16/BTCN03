@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { BOARD } from '../const';
 import { CLICK_SQUARE, REPLAY, SORT, JUMP_TO } from '../actions';
 import { handleClick, sort, jumpTo } from '../utils';
+import user from './user';
 
 const initState = {
   history: [{}],
@@ -38,5 +39,6 @@ const game = (state = initState, action) => {
 };
 
 export default combineReducers({
-  game
+  game,
+  user
 });
