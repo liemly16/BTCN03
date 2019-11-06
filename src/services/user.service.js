@@ -36,6 +36,39 @@ class UserService {
         return user;
       });
   }
+
+  getInfo() {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    };
+
+    return fetch(`${config.host}/me`, requestOptions)
+      .then(handleResponse)
+      .then(user => {
+        return user;
+      });
+  }
+
+  updateInfo(name, gender) {
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ name, gender })
+    };
+
+    return fetch(`${config.host}/info`, requestOptions)
+      .then(handleResponse)
+      .then(user => {
+        return user;
+      });
+  }
 }
 
 function handleResponse(response) {

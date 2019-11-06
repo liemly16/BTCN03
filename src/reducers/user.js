@@ -16,6 +16,11 @@ export default (state = initState, action) => {
         }
       };
     }
+    case userConstants.UPDATE_INFO_SUCCESS: {
+      const s = { ...state };
+      s.user = action.user;
+      return s;
+    }
     case userConstants.LOGIN_FAILURE:
     case userConstants.LOGIN_REQUEST:
       return state;
