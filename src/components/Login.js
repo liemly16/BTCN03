@@ -16,7 +16,8 @@ class Login extends React.Component {
     this.login = this.login.bind(this);
   }
 
-  login() {
+  login(e) {
+    e.preventDefault();
     const { login } = this.props;
     login(this.refs.username.value, this.refs.password.value);
   }
@@ -26,7 +27,7 @@ class Login extends React.Component {
       <div className="row">
         <div className="col-md-offset-4 col-md-4">
           <h2>Login</h2>
-          <form>
+          <form onSubmit={this.login}>
             <div className="form-group">
               <label>Username</label>
               <input ref="username" type="text" className="form-control" />
@@ -38,8 +39,7 @@ class Login extends React.Component {
 
             <div className="form-group text-center">
               <input
-                onClick={this.login}
-                type="button"
+                type="submit"
                 value="Submit"
                 className="btn btn-default btn-outline"
               />

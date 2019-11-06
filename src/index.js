@@ -13,6 +13,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
+import PrivateRoute from './components/PrivateRoute';
 
 const store = createStore(
   rootReducer,
@@ -31,7 +32,7 @@ const routing = (
     <Router>
       <div>
         <Navbar />
-        <Route exact path="/" component={Home} />
+        <PrivateRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
       </div>

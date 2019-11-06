@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NavbarComponent = () => {
   return (
@@ -14,15 +15,20 @@ const NavbarComponent = () => {
           <div id="navbar-right" className="navbar-collapse collapse">
             <ul className="nav navbar-nav navbar-right">
               <li>
-                <a href="/login">
+                <Link to="/register" className="btn btn-link">
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="btn btn-link">
                   Login
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="/register">Register</a>
-              </li>
-              <li>
-                <a href="/">Home</a>
+                <Link to="/" className="btn btn-link">
+                  Home
+                </Link>
               </li>
             </ul>
           </div>

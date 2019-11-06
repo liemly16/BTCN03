@@ -14,7 +14,7 @@ class UserService {
       body: JSON.stringify({ username, password })
     };
 
-    return fetch(`${config.host}/users/register`, requestOptions)
+    return fetch(`${config.host}/user/register`, requestOptions)
       .then(handleResponse)
       .then(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
